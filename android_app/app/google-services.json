@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "95069441601",
+    "project_id": "smart-dog-bell",
+    "storage_bucket": "smart-dog-bell.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:95069441601:android:40a27a8054f37a4cf6c0c0",
+        "android_client_info": {
+          "package_name": "com.example.smartdogbell"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "95069441601-pp3vjjf2tah1nf79d48l7tbnb74725ri.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7F1UB7x4BOvNsaY85vDhHqHgQWUwUSyg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "95069441601-pp3vjjf2tah1nf79d48l7tbnb74725ri.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

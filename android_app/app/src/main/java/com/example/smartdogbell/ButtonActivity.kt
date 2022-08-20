@@ -157,6 +157,7 @@ class ButtonActivity : AppCompatActivity() {
     }
 
 
+
 //    private fun hide() {
 //        // Hide UI first
 //        supportActionBar?.hide()
