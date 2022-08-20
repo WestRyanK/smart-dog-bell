@@ -103,7 +103,7 @@ class ButtonActivity : AppCompatActivity() {
         val ringtoneUri: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         ringtone = RingtoneManager.getRingtone(applicationContext, ringtoneUri)
         createNewNotificationChannel()
-        enableFullscreen()
+//        enableFullscreen()
     }
 
     private fun enableFullscreen() {
@@ -149,6 +149,9 @@ class ButtonActivity : AppCompatActivity() {
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(title)
             .setContentText(message)
+            .setAutoCancel(true)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setVibrate(longArrayOf(100, 200, 100, 600, 100, 200, 100))
 
         notificationManager.notify(0, builder.build())
     }
