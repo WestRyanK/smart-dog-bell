@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/fullscreenBackgroundColor"
+    android:keepScreenOn="true"
     android:theme="@style/ThemeOverlay.SmartDogBell.FullscreenContainer"
     tools:context=".ButtonActivity">
 
@@ -23,7 +24,6 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:text="Boop to Poop"
-        android:keepScreenOn="true"
         android:backgroundTint="@color/light_blue_600"
         android:textColor="?attr/fullscreenTextColor"
         android:textSize="50sp"
