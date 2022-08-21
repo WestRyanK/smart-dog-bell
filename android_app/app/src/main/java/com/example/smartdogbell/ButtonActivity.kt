@@ -6,6 +6,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Color
+import android.media.MediaPlayer
 import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
@@ -31,9 +32,9 @@ class ButtonActivity : AppCompatActivity() {
     private lateinit var notifyButton: TextView
     private lateinit var fullscreenContentControls: LinearLayout
     private val hideHandler = Handler(Looper.myLooper()!!)
-    private lateinit var ringtone: Ringtone
     private val NOTIFICATION_CHANNEL_ID = "DOG_BELL"
     private lateinit var notificationManager: NotificationManager
+    private lateinit var notificationPlayer: MediaPlayer
 
 //    @SuppressLint("InlinedApi")
 //    private val hidePart2Runnable = Runnable {
@@ -100,10 +101,9 @@ class ButtonActivity : AppCompatActivity() {
 
 //        fullscreenContentControls = binding.fullscreenContentControls
 
-        val ringtoneUri: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        ringtone = RingtoneManager.getRingtone(applicationContext, ringtoneUri)
+        notificationPlayer = MediaPlayer.create(this, R.raw.azula_theme_short)
         createNewNotificationChannel()
-//        enableFullscreen()
+        enableFullscreen()
     }
 
     private fun enableFullscreen() {
@@ -124,9 +124,10 @@ class ButtonActivity : AppCompatActivity() {
     }
 
     private fun notifyButtonClick() {
-        Toast.makeText(applicationContext, "Button Clicked", Toast.LENGTH_SHORT).show()
-        ringtone.play()
-        createNewNotification("Dog Alert", "Azula needs to go outside!")
+        if (!isNotifying()) {
+            Toast.makeText(applicationContext, "Button Clicked", Toast.LENGTH_SHORT).show()
+            createNewNotification("Dog Alert", "Azula needs to go outside!")
+        }
     }
 
     private fun createNewNotificationChannel() {
@@ -151,11 +152,23 @@ class ButtonActivity : AppCompatActivity() {
             .setContentText(message)
             .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setVibrate(longArrayOf(100, 200, 100, 600, 100, 200, 100))
+            .setVibrate(longArrayOf(0, 500))
 
         notificationManager.notify(0, builder.build())
+        playNotificationSound()
     }
 
+    private fun playNotificationSound() {
+        if (notificationPlayer.isPlaying) {
+            notificationPlayer.stop()
+            notificationPlayer.prepare()
+        }
+        notificationPlayer.start()
+    }
+
+    private fun isNotifying(): Boolean {
+        return notificationPlayer.isPlaying
+    }
 
 
 //    private fun hide() {
