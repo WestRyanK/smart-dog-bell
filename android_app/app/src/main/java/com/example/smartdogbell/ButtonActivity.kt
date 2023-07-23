@@ -41,7 +41,6 @@ class ButtonActivity : AppCompatActivity() {
 
         notifyButton = binding.notifyButton
         notifyButton.setOnClickListener { notifyButtonClick() }
-        notifyButton.text = settings.buttonText
 
         settingsButton = binding.settingsButton
         settingsButton.setOnClickListener { settingsButtonClick() }
@@ -54,6 +53,7 @@ class ButtonActivity : AppCompatActivity() {
         super.onResume()
         player = SoundPlayer(this, settings)
 
+        notifyButton.text = settings.buttonText
         settingsButton.visibility = View.VISIBLE
         GlobalScope.launch(Dispatchers.Main) {
             delay(hideSettingsDelayMS)
