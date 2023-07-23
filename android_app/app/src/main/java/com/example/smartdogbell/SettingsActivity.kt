@@ -2,6 +2,7 @@ package com.example.smartdogbell
 
 import android.app.Activity
 import android.content.Intent
+import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -9,7 +10,6 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import com.example.smartdogbell.databinding.ActivityButtonBinding
 import com.example.smartdogbell.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
@@ -35,15 +35,21 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun playSoundButtonClick() {
-        val soundUri: Uri = Uri.parse(settings.soundFilePath)
-        val mediaPlayer = MediaPlayer.create(this, soundUri)
-        mediaPlayer.prepare()
-        mediaPlayer.start()
-        mediaPlayer.setOnCompletionListener {
-            mediaPlayer.release()
+        if (settings.soundFilePath != "") {
+            val soundUri: Uri = Uri.parse(settings.soundFilePath)
+            val mediaPlayer = MediaPlayer().apply {
+                setAudioStreamType(AudioManager.STREAM_NOTIFICATION)
+                setDataSource(applicationContext, soundUri)
+                prepare()
+                start()
+                setOnCompletionListener {
+                    release()
+                }
+            }
         }
-
-        Toast.makeText(applicationContext, "No sound file selected", Toast.LENGTH_SHORT).show()
+        else {
+            Toast.makeText(applicationContext, "No sound file selected", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun changeSoundButtonClick() {
@@ -58,7 +64,7 @@ class SettingsActivity : AppCompatActivity() {
         if (result.resultCode == Activity.RESULT_OK) {
             val data: Intent? = result.data
             data?.data?.also { uri ->
-                settings.soundFilePath = uri.path ?: ""
+                this@SettingsActivity.settings.soundFilePath = uri.toString()
                 Toast.makeText(applicationContext, uri.toString(), Toast.LENGTH_SHORT).show()
             }
         }

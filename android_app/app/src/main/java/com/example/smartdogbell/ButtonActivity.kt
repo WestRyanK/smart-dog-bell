@@ -6,7 +6,9 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Intent
 import android.graphics.Color
+import android.media.AudioManager
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -46,12 +48,15 @@ class ButtonActivity : AppCompatActivity() {
         notifyButton = binding.notifyButton
         notifyButton.setOnClickListener { notifyButtonClick() }
 
-        notificationPlayer = MediaPlayer.create(this, R.raw.azula_theme_short)
-        createNewNotificationChannel()
-        enableFullscreen()
-
         settings = Settings(this)
         startTimestamp = LocalDateTime.now()
+
+        notificationPlayer = MediaPlayer().apply {
+            setAudioStreamType(AudioManager.STREAM_NOTIFICATION)
+        }
+
+        createNewNotificationChannel()
+        enableFullscreen()
     }
 
     private fun enableFullscreen() {
@@ -119,9 +124,12 @@ class ButtonActivity : AppCompatActivity() {
 
     private fun playNotificationSound() {
         if (notificationPlayer.isPlaying) {
-            notificationPlayer.stop()
-            notificationPlayer.prepare()
+            return
         }
+
+        val soundUri: Uri = Uri.parse(settings.soundFilePath)
+        notificationPlayer.setDataSource(applicationContext, soundUri)
+        notificationPlayer.prepare()
         notificationPlayer.start()
     }
 
