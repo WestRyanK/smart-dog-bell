@@ -86,7 +86,6 @@ class ButtonActivity : AppCompatActivity() {
 
     private fun notifyButtonClick() {
         if (!isNotifying()) {
-            Toast.makeText(applicationContext, "Button Clicked", Toast.LENGTH_SHORT).show()
             createNewNotification("Dog Alert", "Azula needs to go outside!")
         }
     }
@@ -124,10 +123,15 @@ class ButtonActivity : AppCompatActivity() {
             return
         }
 
-        val soundUri: Uri = Uri.parse(settings.soundFilePath)
-        notificationPlayer.setDataSource(applicationContext, soundUri)
-        notificationPlayer.prepare()
-        notificationPlayer.start()
+        try {
+            val soundUri: Uri = Uri.parse(settings.soundFilePath)
+            notificationPlayer.setDataSource(applicationContext, soundUri)
+            notificationPlayer.prepare()
+            notificationPlayer.start()
+        }
+        catch (ex: Exception) {
+            Toast.makeText(applicationContext, "No Sound File Set!", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun isNotifying(): Boolean {
