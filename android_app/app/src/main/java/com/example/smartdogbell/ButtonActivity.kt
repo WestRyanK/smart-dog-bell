@@ -54,6 +54,9 @@ class ButtonActivity : AppCompatActivity() {
         player = SoundPlayer(this, settings)
 
         notifyButton.text = settings.buttonText
+        notifyButton.setBackgroundColor(settings.backgroundColor)
+        notifyButton.setTextColor(settings.foregroundColor)
+
         settingsButton.visibility = View.VISIBLE
         GlobalScope.launch(Dispatchers.Main) {
             delay(hideSettingsDelayMS)

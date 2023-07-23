@@ -2,15 +2,13 @@ package com.example.smartdogbell
 
 import android.app.Activity
 import android.content.Intent
-import android.media.AudioManager
-import android.media.MediaPlayer
-import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.example.smartdogbell.databinding.ActivitySettingsBinding
 
@@ -20,6 +18,10 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var changeSoundButton: Button
     private lateinit var playSoundButton: Button
     private lateinit var buttonTextEditText: EditText
+    private lateinit var foregroundColorEditText: EditText
+    private lateinit var backgroundColorEditText: EditText
+    private lateinit var foregroundColorImageView: ImageView
+    private lateinit var backgroundColorImageView: ImageView
     private lateinit var settings: Settings
     private lateinit var player: SoundPlayer
 
@@ -34,16 +36,44 @@ class SettingsActivity : AppCompatActivity() {
         changeSoundButton = binding.changeSoundButton
         playSoundButton = binding.playSoundButton
         buttonTextEditText = binding.buttonTextEditText
+        foregroundColorEditText = binding.foregroundColorEditText
+        backgroundColorEditText = binding.backgroundColorEditText
+        foregroundColorImageView = binding.foregroundColorImageView
+        backgroundColorImageView = binding.backgroundColorImageView
 
         changeSoundButton.setOnClickListener { changeSoundButtonClick() }
         playSoundButton.setOnClickListener { player.playSound() }
 
         buttonTextEditText.setText(settings.buttonText)
         buttonTextEditText.addTextChangedListener { buttonTextEditTextChanged() }
-    }
 
-    private fun buttonTextEditTextChanged() {
-        settings.buttonText = buttonTextEditText.text.toString()
+        loadColor(foregroundColorEditText, foregroundColorImageView, settings.foregroundColor)
+        foregroundColorEditText.addTextChangedListener {
+            extractColor(foregroundColorEditText)?.let {
+                settings.foregroundColor = it
+            }
+        }
+        foregroundColorEditText.setOnFocusChangeListener { view, b ->
+            loadColor(
+                foregroundColorEditText,
+                foregroundColorImageView,
+                settings.foregroundColor
+            )
+        }
+
+        loadColor(backgroundColorEditText, backgroundColorImageView, settings.backgroundColor)
+        backgroundColorEditText.addTextChangedListener {
+            extractColor(backgroundColorEditText)?.let {
+                settings.backgroundColor = it
+            }
+        }
+        backgroundColorEditText.setOnFocusChangeListener { view, b ->
+            loadColor(
+                backgroundColorEditText,
+                backgroundColorImageView,
+                settings.backgroundColor
+            )
+        }
     }
 
     override fun onResume() {
@@ -56,6 +86,32 @@ class SettingsActivity : AppCompatActivity() {
         player.release()
     }
 
+    private fun loadColor(editText: EditText, imageView: ImageView, color: Int) {
+        val hex = toHex(color)
+        editText.setText(hex)
+        imageView.setBackgroundColor(color)
+    }
+
+    private fun toHex(color: Int): String {
+        val noLeadingZerosHex = color.toUInt().toString(16)
+        val leadingZerosHex = "0".repeat(8 - noLeadingZerosHex.length) + noLeadingZerosHex
+        return leadingZerosHex
+    }
+
+    private fun extractColor(editText: EditText): Int? {
+        return try {
+            val l: Long = java.lang.Long.parseLong(editText.text.toString(), 16)
+            val lInt = l.toInt()
+            lInt
+        } catch (ex: Exception) {
+            null
+        }
+    }
+
+    private fun buttonTextEditTextChanged() {
+        settings.buttonText = buttonTextEditText.text.toString()
+    }
+
     private fun changeSoundButtonClick() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
@@ -64,13 +120,14 @@ class SettingsActivity : AppCompatActivity() {
         resultLauncher.launch(intent)
     }
 
-    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val data: Intent? = result.data
-            data?.data?.also { uri ->
-                this@SettingsActivity.settings.soundFilePath = uri.toString()
-                Toast.makeText(applicationContext, uri.toString(), Toast.LENGTH_SHORT).show()
+    var resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent? = result.data
+                data?.data?.also { uri ->
+                    this@SettingsActivity.settings.soundFilePath = uri.toString()
+                    Toast.makeText(applicationContext, uri.toString(), Toast.LENGTH_SHORT).show()
+                }
             }
         }
-    }
 }

@@ -13,8 +13,6 @@
         android:id="@+id/notifyButton"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:backgroundTint="@color/light_blue_600"
-        android:textColor="?attr/fullscreenTextColor"
         android:textSize="50sp"
         android:textStyle="bold" />
     <Button
