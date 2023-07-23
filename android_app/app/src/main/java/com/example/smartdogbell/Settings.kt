@@ -30,18 +30,18 @@ class Settings(context: Context) {
 
     private val foregroundColorKey: String = "ForegroundColor"
     var foregroundColor: Int
-        get() = preferences.getInt(backgroundColorKey, Color.BLUE)
+        get() = preferences.getInt(foregroundColorKey, Color.BLUE)
         set(value) = putInt(foregroundColorKey, value)
 
     private fun putInt(key: String, value: Int) {
         val editor = preferences.edit()
-        editor.putInt(foregroundColorKey, value)
+        editor.putInt(key, value)
         editor.apply()
     }
 
     private fun putString(key: String, value: String) {
         val editor = preferences.edit()
-        editor.putString(foregroundColorKey, value)
+        editor.putString(key, value)
         editor.apply()
     }
 }
