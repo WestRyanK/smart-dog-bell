@@ -87,22 +87,42 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun loadColor(editText: EditText, imageView: ImageView, color: Int) {
-        val hex = toHex(color)
-        editText.setText(hex)
+        val rgbHex = toRgbHex(color)
+        val poundRgbHex = "#$rgbHex"
+        editText.setText(poundRgbHex)
         imageView.setBackgroundColor(color)
     }
 
-    private fun toHex(color: Int): String {
-        val noLeadingZerosHex = color.toUInt().toString(16)
-        val leadingZerosHex = "0".repeat(8 - noLeadingZerosHex.length) + noLeadingZerosHex
-        return leadingZerosHex
+    private fun toRgbHex(color: Int): String {
+        var hex = color.toUInt().toString(16)
+        val rgbHex = toRgbHex(hex)
+        return rgbHex
+    }
+
+    private fun toRgbHex(hex: String): String {
+        val poundlessHex = if (hex.length > 0 && hex[0] == '#') {
+            hex.substring(1)
+        }
+        else {
+            hex
+        }
+        val substringStart = poundlessHex.length - 6
+        val noAlphaHex = if (substringStart > 0) {
+            poundlessHex.substring(substringStart)
+        }
+        else {
+            poundlessHex
+        }
+        val rgbHex = noAlphaHex + "0".repeat(6 - noAlphaHex.length)
+        return rgbHex
     }
 
     private fun extractColor(editText: EditText): Int? {
         return try {
-            val l: Long = java.lang.Long.parseLong(editText.text.toString(), 16)
-            val lInt = l.toInt()
-            lInt
+            val rgbHex = toRgbHex(editText.text.toString())
+            val argbHex = "FF$rgbHex"
+            val longHex: Long = java.lang.Long.parseLong(argbHex, 16)
+            longHex.toInt()
         } catch (ex: Exception) {
             null
         }

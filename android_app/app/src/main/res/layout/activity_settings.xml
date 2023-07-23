@@ -43,7 +43,7 @@
         android:id="@+id/foregroundColorTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Foreground Color (argb hex): "
+        android:text="Foreground Color (rgb hex): "
         app:layout_constraintBaseline_toBaselineOf="@id/foregroundColorEditText"
         app:layout_constraintLeft_toLeftOf="parent"
         android:padding="10dp"/>
@@ -68,7 +68,7 @@
         android:id="@+id/backgroundColorTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Background Color (argb hex): "
+        android:text="Background Color (rgb hex): "
         app:layout_constraintBaseline_toBaselineOf="@id/backgroundColorEditText"
         app:layout_constraintLeft_toLeftOf="parent"
         android:padding="10dp"/>
