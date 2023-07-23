@@ -147,6 +147,8 @@ class SettingsActivity : AppCompatActivity() {
                 data?.data?.also { uri ->
                     this@SettingsActivity.settings.soundFilePath = uri.toString()
                     Toast.makeText(applicationContext, uri.toString(), Toast.LENGTH_SHORT).show()
+                    player = SoundPlayer(this, settings)
+                    player.playSound()
                 }
             }
         }
