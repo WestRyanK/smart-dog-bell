@@ -48,15 +48,17 @@ class ButtonActivity : AppCompatActivity() {
 
         createNewNotificationChannel()
         enableFullscreen()
-        GlobalScope.launch(Dispatchers.Main) {
-            delay(hideSettingsDelayMS)
-            settingsButton.visibility = View.INVISIBLE
-        }
     }
 
     override fun onResume() {
         super.onResume()
         player = SoundPlayer(this, settings)
+
+        settingsButton.visibility = View.VISIBLE
+        GlobalScope.launch(Dispatchers.Main) {
+            delay(hideSettingsDelayMS)
+            settingsButton.visibility = View.INVISIBLE
+        }
     }
 
     override fun onStop() {
