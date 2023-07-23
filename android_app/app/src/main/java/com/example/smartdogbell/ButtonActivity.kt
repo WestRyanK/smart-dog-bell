@@ -1,9 +1,9 @@
 package com.example.smartdogbell
 
-import androidx.appcompat.app.AppCompatActivity
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import kotlinx.coroutines.*
 import android.content.Intent
 import android.graphics.Color
 import android.media.AudioManager
@@ -11,28 +11,24 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.view.WindowInsets
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import com.example.smartdogbell.databinding.ActivityButtonBinding
-import java.time.Duration
-import java.time.LocalDateTime
 
 class ButtonActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityButtonBinding
-    private lateinit var notifyButton: TextView
+    private lateinit var notifyButton: Button
+    private lateinit var settingsButton: Button
     private val NOTIFICATION_CHANNEL_ID = "DOG_BELL"
     private lateinit var notificationManager: NotificationManager
     private lateinit var notificationPlayer: MediaPlayer
     private lateinit var settings: Settings
-    private lateinit var startTimestamp: LocalDateTime
-    private val startupWaitTime: Duration = Duration.ofSeconds(5)
+    private val hideSettingsDelayMS: Long = 10_000
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,11 +42,13 @@ class ButtonActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         settings = Settings(this)
-        startTimestamp = LocalDateTime.now()
 
         notifyButton = binding.notifyButton
         notifyButton.setOnClickListener { notifyButtonClick() }
         notifyButton.text = settings.buttonText
+
+        settingsButton = binding.settingsButton
+        settingsButton.setOnClickListener { settingsButtonClick() }
 
         notificationPlayer = MediaPlayer().apply {
             setAudioStreamType(AudioManager.STREAM_NOTIFICATION)
@@ -58,6 +56,15 @@ class ButtonActivity : AppCompatActivity() {
 
         createNewNotificationChannel()
         enableFullscreen()
+        GlobalScope.launch(Dispatchers.Main) {
+            delay(hideSettingsDelayMS)
+            settingsButton.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun settingsButtonClick() {
+        val intent = Intent(this, SettingsActivity::class.java)
+        startActivity(intent)
     }
 
     private fun enableFullscreen() {
@@ -78,21 +85,10 @@ class ButtonActivity : AppCompatActivity() {
     }
 
     private fun notifyButtonClick() {
-        val currentTime = LocalDateTime.now()
-        if (currentTime.isBefore(startTimestamp.plus(startupWaitTime))) {
-            openSettings()
+        if (!isNotifying()) {
+            Toast.makeText(applicationContext, "Button Clicked", Toast.LENGTH_SHORT).show()
+            createNewNotification("Dog Alert", "Azula needs to go outside!")
         }
-        else {
-            if (!isNotifying()) {
-                Toast.makeText(applicationContext, "Button Clicked", Toast.LENGTH_SHORT).show()
-                createNewNotification("Dog Alert", "Azula needs to go outside!")
-            }
-        }
-    }
-
-    private fun openSettings() {
-        val intent = Intent(this, SettingsActivity::class.java)
-        startActivity(intent)
     }
 
     private fun createNewNotificationChannel() {

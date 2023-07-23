@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?attr/fullscreenBackgroundColor"
     android:keepScreenOn="true"
     android:theme="@style/ThemeOverlay.SmartDogBell.FullscreenContainer"
     tools:context=".ButtonActivity">
 
-<!--    <Button-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:text="Click Me"-->
-<!--        android:backgroundTint="@color/white"-->
-<!--        android:textColor="@color/black"-->
-<!--        />-->
-    <!-- The primary full-screen view. This can be replaced with whatever view
-         is needed to present your content, e.g. VideoView, SurfaceView,
-         TextureView, etc. -->
-
     <Button
-        android:id="@+id/notify_button"
+        android:id="@+id/notifyButton"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:backgroundTint="@color/light_blue_600"
         android:textColor="?attr/fullscreenTextColor"
         android:textSize="50sp"
-        android:textStyle="bold" >
-    </Button>
-</FrameLayout>
+        android:textStyle="bold" />
+    <Button
+        android:id="@+id/settingsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Settings"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="20dp"
+        android:textSize="25sp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
