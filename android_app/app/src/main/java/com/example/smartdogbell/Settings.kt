@@ -15,7 +15,7 @@ class Settings(context: Context) {
 
     private val buttonTextKey: String = "ButtonText"
     var buttonText: String
-        get() = preferences.getString(buttonTextKey, null) ?: ""
+        get() = preferences.getString(buttonTextKey, null) ?: "Boop to Poop"
         set(value) = putString(buttonTextKey, value)
 
     private val soundFilePathKey: String = "SoundFilePath"

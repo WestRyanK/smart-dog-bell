@@ -35,4 +35,22 @@
         android:padding="10dp"
         android:layout_margin="10dp"
         android:text="Play Sound"/>
+    <TextView
+        android:id="@+id/buttonTextTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button Text:"
+        app:layout_constraintBaseline_toBaselineOf="@id/buttonTextEditText"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:padding="10dp"/>
+    <EditText
+        android:id="@+id/buttonTextEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/playSoundButton"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/buttonTextTextView"
+        android:padding="10dp"
+        android:text=""
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

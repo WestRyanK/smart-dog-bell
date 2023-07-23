@@ -45,11 +45,12 @@ class ButtonActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        notifyButton = binding.notifyButton
-        notifyButton.setOnClickListener { notifyButtonClick() }
-
         settings = Settings(this)
         startTimestamp = LocalDateTime.now()
+
+        notifyButton = binding.notifyButton
+        notifyButton.setOnClickListener { notifyButtonClick() }
+        notifyButton.text = settings.buttonText
 
         notificationPlayer = MediaPlayer().apply {
             setAudioStreamType(AudioManager.STREAM_NOTIFICATION)

@@ -23,7 +23,6 @@
         android:id="@+id/notify_button"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:text="Boop to Poop"
         android:backgroundTint="@color/light_blue_600"
         android:textColor="?attr/fullscreenTextColor"
         android:textSize="50sp"

@@ -7,9 +7,12 @@ import android.media.MediaPlayer
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.widget.addTextChangedListener
 import com.example.smartdogbell.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
@@ -17,6 +20,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
     private lateinit var changeSoundButton: Button
     private lateinit var playSoundButton: Button
+    private lateinit var buttonTextEditText: EditText
     private lateinit var settings: Settings
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,13 +29,21 @@ class SettingsActivity : AppCompatActivity() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        settings = Settings(this)
+
         changeSoundButton = binding.changeSoundButton
         playSoundButton = binding.playSoundButton
+        buttonTextEditText = binding.buttonTextEditText
 
         changeSoundButton.setOnClickListener { changeSoundButtonClick() }
         playSoundButton.setOnClickListener { playSoundButtonClick() }
 
-        settings = Settings(this)
+        buttonTextEditText.setText(settings.buttonText)
+        buttonTextEditText.addTextChangedListener { buttonTextEditTextChanged() }
+    }
+
+    private fun buttonTextEditTextChanged() {
+        settings.buttonText = buttonTextEditText.text.toString()
     }
 
     private fun playSoundButtonClick() {
