@@ -46,11 +46,11 @@ class ButtonActivity : AppCompatActivity() {
         settingsButton.setOnClickListener { settingsButtonClick() }
 
         createNewNotificationChannel()
-        enableFullscreen()
     }
 
     override fun onResume() {
         super.onResume()
+        enableFullscreen()
         player = SoundPlayer(this, settings)
 
         notifyButton.text = settings.buttonText
