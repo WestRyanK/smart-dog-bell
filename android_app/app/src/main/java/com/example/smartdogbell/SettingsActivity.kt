@@ -21,6 +21,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var playSoundButton: Button
     private lateinit var buttonTextEditText: EditText
     private lateinit var settings: Settings
+    private lateinit var player: SoundPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +36,7 @@ class SettingsActivity : AppCompatActivity() {
         buttonTextEditText = binding.buttonTextEditText
 
         changeSoundButton.setOnClickListener { changeSoundButtonClick() }
-        playSoundButton.setOnClickListener { playSoundButtonClick() }
+        playSoundButton.setOnClickListener { player.playSound() }
 
         buttonTextEditText.setText(settings.buttonText)
         buttonTextEditText.addTextChangedListener { buttonTextEditTextChanged() }
@@ -45,22 +46,14 @@ class SettingsActivity : AppCompatActivity() {
         settings.buttonText = buttonTextEditText.text.toString()
     }
 
-    private fun playSoundButtonClick() {
-        if (settings.soundFilePath != "") {
-            val soundUri: Uri = Uri.parse(settings.soundFilePath)
-            val mediaPlayer = MediaPlayer().apply {
-                setAudioStreamType(AudioManager.STREAM_NOTIFICATION)
-                setDataSource(applicationContext, soundUri)
-                prepare()
-                start()
-                setOnCompletionListener {
-                    release()
-                }
-            }
-        }
-        else {
-            Toast.makeText(applicationContext, "No sound file selected", Toast.LENGTH_SHORT).show()
-        }
+    override fun onResume() {
+        super.onResume()
+        player = SoundPlayer(this, settings)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        player.release()
     }
 
     private fun changeSoundButtonClick() {

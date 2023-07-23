@@ -3,21 +3,17 @@ package com.example.smartdogbell
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import kotlinx.coroutines.*
 import android.content.Intent
 import android.graphics.Color
-import android.media.AudioManager
-import android.media.MediaPlayer
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowInsets
 import android.widget.Button
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import com.example.smartdogbell.databinding.ActivityButtonBinding
+import kotlinx.coroutines.*
 
 class ButtonActivity : AppCompatActivity() {
 
@@ -26,8 +22,8 @@ class ButtonActivity : AppCompatActivity() {
     private lateinit var settingsButton: Button
     private val NOTIFICATION_CHANNEL_ID = "DOG_BELL"
     private lateinit var notificationManager: NotificationManager
-    private lateinit var notificationPlayer: MediaPlayer
     private lateinit var settings: Settings
+    private lateinit var player: SoundPlayer
     private val hideSettingsDelayMS: Long = 10_000
 
     @SuppressLint("ClickableViewAccessibility")
@@ -50,16 +46,22 @@ class ButtonActivity : AppCompatActivity() {
         settingsButton = binding.settingsButton
         settingsButton.setOnClickListener { settingsButtonClick() }
 
-        notificationPlayer = MediaPlayer().apply {
-            setAudioStreamType(AudioManager.STREAM_NOTIFICATION)
-        }
-
         createNewNotificationChannel()
         enableFullscreen()
         GlobalScope.launch(Dispatchers.Main) {
             delay(hideSettingsDelayMS)
             settingsButton.visibility = View.INVISIBLE
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        player = SoundPlayer(this, settings)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        player.release()
     }
 
     private fun settingsButtonClick() {
@@ -85,7 +87,7 @@ class ButtonActivity : AppCompatActivity() {
     }
 
     private fun notifyButtonClick() {
-        if (!isNotifying()) {
+        if (!player.isPlaying) {
             createNewNotification("Dog Alert", "Azula needs to go outside!")
         }
     }
@@ -115,26 +117,6 @@ class ButtonActivity : AppCompatActivity() {
             .setVibrate(longArrayOf(0, 500))
 
         notificationManager.notify(0, builder.build())
-        playNotificationSound()
-    }
-
-    private fun playNotificationSound() {
-        if (notificationPlayer.isPlaying) {
-            return
-        }
-
-        try {
-            val soundUri: Uri = Uri.parse(settings.soundFilePath)
-            notificationPlayer.setDataSource(applicationContext, soundUri)
-            notificationPlayer.prepare()
-            notificationPlayer.start()
-        }
-        catch (ex: Exception) {
-            Toast.makeText(applicationContext, "No Sound File Set!", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun isNotifying(): Boolean {
-        return notificationPlayer.isPlaying
+        player.playSound()
     }
 }
